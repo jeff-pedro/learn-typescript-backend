@@ -1,9 +1,17 @@
-import express, { Response } from "express";
-import routes from "./routes";
+import express, { Response } from "express"
+import routes from "./routes"
+import { AppDataSource } from "./config/database"
 
-const app = express();
-app.use(express.json());
+AppDataSource.initialize()
+    .then(() => {
+        console.log("DataSource inicializado com sucesso!");
+    }).catch((error: Error) => {
+        console.log(error);
+    })
 
-routes(app);
+const app = express()
+app.use(express.json())
 
-export default app;
+routes(app)
+
+export default app
