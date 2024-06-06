@@ -1,14 +1,16 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import PetController from "../controllers/PetController";
+import PetRepository from "../repositories/PetRepository";
+import { AppDataSource } from "../config/dataSource";
 
 const router = Router();
-
-const petController = new PetController();
+const petRepository = new PetRepository(AppDataSource.getRepository("PetEntity"));
+const petController = new PetController(petRepository);
 
 router
-    .post("/", (req: Request, res: Response) => petController.criaPet(req, res))
-    .get("/", (req: Request, res: Response) => petController.listaPets(req, res))
-    .put("/:id", (req: Request, res: Response) => petController.atualizaPet(req, res))
-    .delete("/:id", (req: Request, res: Response) => petController.deletaPet(req, res));
+    .post("/", petController.criaPet.bind(petController))
+    .get("/", (req, res) => petController.listaPets(req, res))
+    .put("/:id", (req, res) => petController.atualizaPet(req, res))
+    .delete("/:id", (req, res) => petController.deletaPet(req, res));
 
 export default router;
