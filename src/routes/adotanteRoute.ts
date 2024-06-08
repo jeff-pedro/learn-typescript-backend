@@ -11,6 +11,7 @@ router
     .post("/", (req, res) => adotanteController.criaAdotante(req, res))
     .get("/", (req, res) => adotanteController.listaAdotante(req, res))
     .put("/:id", (req, res) => adotanteController.atualizaAdotante(req, res))
+    .patch("/:id", (req, res) => adotanteController.atualizaEnderecoAdotante(req, res))
     .delete("/:id", (req, res) => adotanteController.deletaAdotante(req, res));
 
 export default router;

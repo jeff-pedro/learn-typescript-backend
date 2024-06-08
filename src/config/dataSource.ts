@@ -3,6 +3,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import PetEntity from "../entities/PetEntity"
 import AdotanteEntity from "../entities/AdotanteEntity"
+import EnderecoEntity from "../entities/EnderecoEntity"
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -11,7 +12,8 @@ export const AppDataSource = new DataSource({
     logging: false,
     entities: [
         PetEntity,
-        AdotanteEntity
+        AdotanteEntity,
+        EnderecoEntity
     ],
     migrations: [],
     subscribers: []

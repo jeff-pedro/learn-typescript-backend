@@ -38,7 +38,7 @@ export default class PetController {
 
     async atualizaPet(req: Request, res: Response) {
         const { id } = req.params
-        const newData = req.body as TipoPet
+        const newData = req.body as PetEntity
 
         const pet = await this.repository.atualizaPet(Number(id), newData)
 
@@ -61,12 +61,17 @@ export default class PetController {
     }
 
     async adotaPet(req: Request, res: Response) {
-        const { id } = req.params
-        try {
-            const pet = await this.repository.adotaPet(Number(id))
-            return res.status(200).json(pet)
-        } catch (error) {
-            return res.status(404).json({ error: "Pet não encontrado!" })
+        const { pet_id, adotante_id } = req.params;
+
+        const { success, message } = await this.repository.adotaPet(
+            Number(pet_id),
+            Number(adotante_id)
+        )
+
+        if (!success) {
+            return res.status(404).json({ message })
         }
+
+        return res.sendStatus(204)
     }
 }
