@@ -1,5 +1,6 @@
 import { Response, Router } from "express";
 import petRouter from "./petRoute";
+import adotanteRouter from "./adotanteRoute"
 
 const router = (app: Router) => {
     app.route("/").get((_, res: Response) => {
@@ -7,6 +8,7 @@ const router = (app: Router) => {
     });
 
     app.use("/pets", petRouter);
+    app.use("/adotantes", adotanteRouter);
 };
 
 export default router;

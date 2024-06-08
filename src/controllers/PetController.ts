@@ -25,12 +25,8 @@ export default class PetController {
             return res.status(400).json({ error: "Espécie inválida" })
         }
 
-        const novoPet = new PetEntity();
-        (novoPet.nome = nome),
-            (novoPet.especie = especie),
-            (novoPet.dataNascimento = dataNascimento),
-            (novoPet.adotado = false),
-            await this.repository.criaPet(novoPet)
+        const novoPet = new PetEntity(nome, especie);
+        await this.repository.criaPet(novoPet)
 
         return res.status(201).json(novoPet)
     }
@@ -62,5 +58,15 @@ export default class PetController {
         }
 
         return res.status(200).json({ message: "Pet deletado com sucesso" })
+    }
+
+    async adotaPet(req: Request, res: Response) {
+        const { id } = req.params
+        try {
+            const pet = await this.repository.adotaPet(Number(id))
+            return res.status(200).json(pet)
+        } catch (error) {
+            return res.status(404).json({ error: "Pet não encontrado!" })
+        }
     }
 }

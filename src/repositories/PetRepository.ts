@@ -15,7 +15,10 @@ export default class PetRepository implements InterfacePetRepository {
     async listaPets(): Promise<PetEntity[]> {
         return await this.repository.find();
     }
-    async atualizaPet(id: number, newData: PetEntity): Promise<{ success: boolean; message?: string; }> {
+    async atualizaPet(
+        id: number,
+        newData: PetEntity
+    ): Promise<{ success: boolean; message?: string; }> {
         try {
             const petToUpdate = await this.repository.findOne({ where: { id } });
 
@@ -44,6 +47,27 @@ export default class PetRepository implements InterfacePetRepository {
             }
 
             await this.repository.remove(petToRemove);
+
+            return { success: true }
+        } catch (error) {
+            return {
+                success: false,
+                message: "Ocorreu um erro ao tentar excluir o pet."
+            }
+        }
+    }
+
+    async adotaPet(id: number): Promise<{ success: boolean, message?: string }> {
+        try {
+            const petToAdopt = await this.repository.findOneBy({ id })
+
+            if (!petToAdopt) {
+                return { success: false, message: "Pet não encontrado" };
+            }
+
+            Object.assign(petToAdopt, { adotado: true })
+
+            await this.repository.save(petToAdopt)
 
             return { success: true }
         } catch (error) {

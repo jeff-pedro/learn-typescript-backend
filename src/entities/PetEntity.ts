@@ -4,13 +4,25 @@ import EnumEspecie from "../enum/EnumEspecie";
 @Entity()
 export default class PetEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
     @Column()
-    nome: string;
+    nome?: string;
     @Column()
-    especie: EnumEspecie;
-    @Column()
-    dataNascimento: Date;
-    @Column()
-    adotado: boolean;
+    especie?: EnumEspecie;
+    @Column({ nullable: true })
+    dataNascimento?: Date;
+    @Column({ default: false })
+    adotado?: boolean;
+
+    constructor(
+        nome?: string,
+        especie?: EnumEspecie,
+        dataNascimento?: Date,
+        adotado?: true
+    ) {
+        this.nome = nome;
+        this.especie = especie;
+        this.dataNascimento = dataNascimento;
+        this.adotado = adotado;
+    }
 }
