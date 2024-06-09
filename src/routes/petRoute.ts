@@ -13,6 +13,8 @@ const petController = new PetController(petRepository);
 router
     .post("/", petController.criaPet.bind(petController))
     .get("/", (req, res) => petController.listaPets(req, res))
+    // .get("/filtroPorte", (req, res) => petController.buscaPetPeloPorte(req, res))
+    .get("/filtro", (req, res) => petController.buscaPetPorCampoGenerico(req, res))
     .put("/:id", (req, res) => petController.atualizaPet(req, res))
     .put("/:pet_id/:adotante_id", (req, res) => petController.adotaPet(req, res))
     .delete("/:id", (req, res) => petController.deletaPet(req, res));
