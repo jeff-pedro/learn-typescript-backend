@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import InterfaceAdotanteRepository from "./interfaces/InterfaceAdotanteRepository";
 import EnderecoEntity from "../entities/EnderecoEntity";
@@ -11,7 +11,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     }
 
     async listaAdotantes(): Promise<AdotanteEntity[]> {
-        return this.repository.find();
+        return await this.repository.find();
     }
 
     async atualizaAdotante(
@@ -50,6 +50,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
 
             return { success: true }
         } catch (error) {
+            console.log(error);
             return {
                 success: false,
                 message: 'Ocorreu um erro ao tentar deletar o adotante'

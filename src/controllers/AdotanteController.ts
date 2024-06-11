@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import AdotanteRepository from "../repositories/AdotanteRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnderecoEntity from "../entities/EnderecoEntity";
-import { TipoRequestBodyAdotante, TipoResponseBodyAdotante } from "../tipos/TiposAdotante";
+import { TipoRequestBodyAdotante, TipoRequestParamsAdotante, TipoResponseBodyAdotante } from "../tipos/TiposAdotante";
 
 export default class AdotanteController {
     constructor(private repository: AdotanteRepository) { }
 
     async criaAdotante(
-        req: Request<{}, {}, TipoRequestBodyAdotante>,
+        req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
         res: Response<TipoResponseBodyAdotante>
     ) {
         const { nome, senha, celular, endereco, foto } = req.body;
@@ -25,12 +25,26 @@ export default class AdotanteController {
         return res.status(201).json({ data: { id: novoAdotante.id, nome, celular } });
     }
 
-    async listaAdotante(req: Request, res: Response) {
+    async listaAdotante(
+        req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+        res: Response<TipoResponseBodyAdotante>
+    ) {
         const listaDeAdotantes = await this.repository.listaAdotantes()
-        return res.json(listaDeAdotantes)
+        const data = listaDeAdotantes.map((adotante) => {
+            return {
+                id: adotante.id,
+                nome: adotante.nome,
+                celular: adotante.celular,
+                endereco: adotante.endereco
+            }
+        })
+        return res.json({ data })
     }
 
-    async atualizaAdotante(req: Request, res: Response) {
+    async atualizaAdotante(
+        req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+        res: Response<TipoResponseBodyAdotante>
+    ) {
         const { id } = req.params;
         const { success, message } = await this.repository.atualizaAdotante(
             Number(id),
@@ -38,35 +52,40 @@ export default class AdotanteController {
         );
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
 
         return res.status(204).json();
     }
 
-    async deletaAdotante(req: Request, res: Response) {
+    async deletaAdotante(
+        req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+        res: Response<TipoResponseBodyAdotante>
+    ) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.deletaAdotante(Number(id));
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
 
         return res.status(204).json();
     }
 
-    async atualizaEnderecoAdotante(req: Request, res: Response) {
+    async atualizaEnderecoAdotante(
+        req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+        res: Response<TipoResponseBodyAdotante>
+    ) {
         const { id } = req.params;
-        const endereco = req.body as EnderecoEntity
 
         const { success, message } = await this.repository.atualizaEnderecoAdotante(
             Number(id),
-            endereco
+            req.body.endereco as EnderecoEntity
         );
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
 
         return res.sendStatus(204);
