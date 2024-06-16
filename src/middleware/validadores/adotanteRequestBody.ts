@@ -1,6 +1,9 @@
 import * as yup from "yup";
+import { pt } from "yup-locale-pt";
 import { TipoRequestBodyAdotante } from "../../tipos/tiposAdotante";
 import { NextFunction, Request, Response } from "express";
+
+yup.setLocale(pt);
 
 const esquemaBodyAdotante: yup.ObjectSchema<Omit<TipoRequestBodyAdotante, "endereco">> =
     yup.object({
@@ -33,7 +36,7 @@ const middlewareValidadorBodyAdotante = async (
             validationErrors[error.path] = error.message;
         })
 
-        return res.status(400).json({ error: validationErrors })
+        return res.status(400).json({ erros: validationErrors })
     }
 }
 

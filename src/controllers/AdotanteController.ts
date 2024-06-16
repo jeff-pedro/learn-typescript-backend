@@ -22,7 +22,7 @@ export default class AdotanteController {
         );
 
         await this.repository.criaAdotante(novoAdotante);
-        return res.status(201).json({ data: { id: novoAdotante.id, nome, celular } });
+        return res.status(201).json({ dados: { id: novoAdotante.id, nome, celular } });
     }
 
     async listaAdotante(
@@ -30,7 +30,7 @@ export default class AdotanteController {
         res: Response<TipoResponseBodyAdotante>
     ) {
         const listaDeAdotantes = await this.repository.listaAdotantes()
-        const data = listaDeAdotantes.map((adotante) => {
+        const dados = listaDeAdotantes.map((adotante) => {
             return {
                 id: adotante.id,
                 nome: adotante.nome,
@@ -38,7 +38,7 @@ export default class AdotanteController {
                 endereco: adotante.endereco !== null ? adotante.endereco : undefined
             }
         })
-        return res.json({ data })
+        return res.json({ dados })
     }
 
     async atualizaAdotante(
@@ -52,7 +52,7 @@ export default class AdotanteController {
         );
 
         if (!success) {
-            return res.status(404).json({ error: message });
+            return res.status(404).json({ erros: message });
         }
 
         return res.status(204).json();
@@ -67,7 +67,7 @@ export default class AdotanteController {
         const { success, message } = await this.repository.deletaAdotante(Number(id));
 
         if (!success) {
-            return res.status(404).json({ error: message });
+            return res.status(404).json({ erros: message });
         }
 
         return res.status(204).json();
@@ -85,7 +85,7 @@ export default class AdotanteController {
         );
 
         if (!success) {
-            return res.status(404).json({ error: message });
+            return res.status(404).json({ erros: message });
         }
 
         return res.sendStatus(204);

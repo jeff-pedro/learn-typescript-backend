@@ -18,11 +18,10 @@ type TipoRequestParamsPet = {
 type TipoRequestBodyPet = Omit<PetEntity, "id">;
 
 type TipoResponseBodyPet = {
-    data?:
+    dados?:
     | Pick<PetEntity, "id" | "nome" | "porte" | "especie">
     | Pick<PetEntity, "id" | "nome" | "porte" | "especie">[],
-    error?: unknown,
-    message?: string
+    erros?: unknown
 };
 
 export {
