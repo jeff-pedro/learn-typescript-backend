@@ -42,7 +42,7 @@ export default class AdotanteEntity {
 
     @BeforeInsert()
     @BeforeUpdate()
-    private senhaCriptografada() {
+    private criptografarSenha() {
         this.senha = criaSenhaCriptografada(this.senha);
     }
 }
