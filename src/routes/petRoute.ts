@@ -1,7 +1,8 @@
-import { Router } from "express";
+import { Request, RequestHandler, Router } from "express";
 import PetController from "../controllers/PetController";
 import PetRepository from "../repositories/PetRepository";
 import { AppDataSource } from "../config/dataSource";
+import { middlewareValidadorBodyPet } from "../middleware/validadores/petRequestBody";
 
 const router = Router();
 const petRepository = new PetRepository(
@@ -10,8 +11,14 @@ const petRepository = new PetRepository(
 );
 const petController = new PetController(petRepository);
 
+const bodyValidatePet: RequestHandler = (req, res, next) => {
+    middlewareValidadorBodyPet(req, res, next);
+}
+
 router
-    .post("/", petController.criaPet.bind(petController))
+    .post("/",
+        bodyValidatePet,
+        petController.criaPet.bind(petController))
     .get("/", (req, res) => petController.listaPets(req, res))
     // .get("/filtroPorte", (req, res) => petController.buscaPetPeloPorte(req, res))
     .get("/filtro", (req, res) => petController.buscaPetPorCampoGenerico(req, res))

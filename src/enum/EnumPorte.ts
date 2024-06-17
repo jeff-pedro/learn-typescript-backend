@@ -1,6 +1,6 @@
 enum EnumPorte {
     pequeno = "pequeno",
-    medio = " medio",
+    medio = "medio",
     grande = "grande"
 }
 
