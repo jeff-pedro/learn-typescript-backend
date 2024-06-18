@@ -1,4 +1,4 @@
-import { Not, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import InterfaceAdotanteRepository from "./interfaces/InterfaceAdotanteRepository";
 import EnderecoEntity from "../entities/EnderecoEntity";
@@ -28,7 +28,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     async atualizaAdotante(
         id: number,
         newData: AdotanteEntity
-    ): Promise<{ success: boolean; message?: string; }> {
+    ) {
         const adotanteToUpdate = await this.repository.findOneBy({ id });
         if (!adotanteToUpdate) {
             throw new NaoEncontrado("Adotante não encontrado")
@@ -41,7 +41,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
         return { success: true }
     }
 
-    async deletaAdotante(id: number): Promise<{ success: boolean; message?: string; }> {
+    async deletaAdotante(id: number) {
         const adotanteToRemove = await this.repository.findOneBy({ id });
         if (!adotanteToRemove) {
             throw new NaoEncontrado("Adotante não encontrado")
@@ -55,7 +55,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     async atualizaEnderecoAdotante(
         idAdotante: number,
         endereco: EnderecoEntity
-    ): Promise<{ success: boolean; message?: string; }> {
+    ) {
         const adotante = await this.repository.findOne({ where: { id: idAdotante } })
         if (!adotante) {
             throw new NaoEncontrado("Adotante não encontrado")

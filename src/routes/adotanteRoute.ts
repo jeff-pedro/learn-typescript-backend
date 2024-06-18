@@ -4,6 +4,7 @@ import AdotanteRepository from "../repositories/AdotanteRepository";
 import { AppDataSource } from "../config/dataSource";
 import { middlewareValidadorBodyAdotante } from "../middleware/validadores/adotanteRequestBody";
 import { middlewareValidadorBodyEndereco } from "../middleware/validadores/enderecoRequestBody";
+import { verificaIdMiddleware } from "../middleware/verificaId";
 
 const router = Router();
 const adotanteRepository = new AdotanteRepository(AppDataSource.getRepository("AdotanteEntity"));
@@ -17,14 +18,20 @@ const bodyValidateEndereco: RequestHandler = (req, res, next) =>
 
 
 router
-    .post("/", bodyValidateAdotante,
-        (req, res) => adotanteController.criaAdotante(req, res)
-    )
+    .post("/",
+        bodyValidateAdotante,
+        (req, res) => adotanteController.criaAdotante(req, res))
+
     .get("/", (req, res) => adotanteController.listaAdotante(req, res))
-    .put("/:id", (req, res) => adotanteController.atualizaAdotante(req, res))
-    .patch("/:id", bodyValidateEndereco,
-        (req, res) => adotanteController.atualizaEnderecoAdotante(req, res)
-    )
-    .delete("/:id", (req, res) => adotanteController.deletaAdotante(req, res));
+
+    .put("/:id",
+        verificaIdMiddleware,
+        (req, res) => adotanteController.atualizaAdotante(req, res))
+
+    .patch("/:id",
+        verificaIdMiddleware,
+        bodyValidateEndereco, (req, res) => adotanteController.atualizaEnderecoAdotante(req, res))
+
+    .delete("/:id", verificaIdMiddleware, (req, res) => adotanteController.deletaAdotante(req, res));
 
 export default router;

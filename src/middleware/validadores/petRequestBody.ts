@@ -4,6 +4,7 @@ import { TipoRequestBodyPet } from "../../tipos/tiposPet";
 import { NextFunction, Request, Response } from "express";
 import EnumEspecie from "../../enum/EnumEspecie";
 import EnumPorte from "../../enum/EnumPorte";
+import tratarErroValidacaoYup from "../../utils/trataValidacaoYup";
 
 yup.setLocale(pt);
 
@@ -21,23 +22,7 @@ const middlewareValidadorBodyPet = async (
     res: Response,
     next: NextFunction
 ) => {
-    try {
-        await esquemaBodyPet.validate(req.body, {
-            abortEarly: false
-        })
-        return next();
-    } catch (error) {
-        const yupErrors = error as yup.ValidationError;
-
-        const validationErrors: Record<string, string> = {};
-
-        yupErrors.inner.forEach((error) => {
-            if (!error.path) return;
-            validationErrors[error.path] = error.message;
-        })
-
-        return res.status(400).json({ erros: validationErrors })
-    }
+    tratarErroValidacaoYup(esquemaBodyPet, req, res, next);
 }
 
 export {
